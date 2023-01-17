@@ -5,11 +5,16 @@
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
+    "@mui/icons-material": "^5.11.0",
+    "@mui/lab": "^5.0.0-alpha.115",
     "@mui/material": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
+    "base-64": "^1.0.0",
+    "fetch-mock": "^9.11.0",
     "react": "latest",
     "react-dom": "latest",
+    "react-router-dom": "^6.6.2",
     "react-scripts": "latest",
     "typescript": "latest"
   },
@@ -30,5 +35,8 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@types/base-64": "^1.0.0"
   }
 }
