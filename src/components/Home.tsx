@@ -1,40 +1,45 @@
-import { Backdrop, CircularProgress, Grid, Paper, Skeleton, styled, Typography } from "@mui/material";
+import { Container, Grid, Paper, styled, Typography } from "@mui/material";
 import { Box } from "@mui/system";
 import React from "react";
 import ClinicianDetails from "./ClinitianDetails";
-import PatientDetails from "./PatientDetails";
+import PatientList from "./PatientList";
+import { CLINICAL_TITLE } from "../constants/strings";
+import MedicationIcon from "@mui/icons-material/Medication";
+import Header from "./Header";
+import { Footer } from "./Footer";
 
 const Item = styled(Paper)(({ theme }) => ({
-    backgroundColor: theme.palette.mode === 'dark' ? '#1A2027' : '#fff',
-    ...theme.typography.body2,
-    padding: theme.spacing(1),
-    textAlign: 'center',
-    color: theme.palette.text.secondary,
-  }));
+  backgroundColor: theme.palette.mode === "dark" ? "#1A2027" : "#fff",
+  ...theme.typography.body2,
+  padding: theme.spacing(1),
+  textAlign: "center",
+  color: theme.palette.text.secondary,
+}));
 
 export default function Home() {
-    return(
-            <Box sx={{ flexGrow: 1 }}>
-            <Grid container spacing={2}>
-              <Grid item xs={6}>
-                {/* <Item> */}
-                    <Typography>
-                  Clinician Portal
-                    </Typography>
-                    {/* </Item> */}
-              </Grid>
-              <Grid item xs={6}>
-                <Item>
-                <ClinicianDetails />
-                </Item>
-              </Grid>
-              <Grid item xs={12}>
-                <Item><PatientDetails /></Item>
-              </Grid>
-              {/* <Grid item xs={8}>
-                <Item>xs=8</Item>
-              </Grid> */}
+  return (
+    <>
+      <Header />
+      <Container maxWidth="lg">
+        <Box sx={{ flexGrow: 1, mt: 4 }}>
+          <Grid container spacing={2}>
+            <Grid item xs={6} sm={8} sx={{ display: "flex", alignItems: "center" }}>
+              <Typography variant="h5">{CLINICAL_TITLE}</Typography> <MedicationIcon />
             </Grid>
-          </Box>
-    );
+            <Grid item xs={6} sm={4} sx={{ display: "flex", justifyContent: 'flex-end' }}>
+              <Item>
+                <ClinicianDetails />
+              </Item>
+            </Grid>
+            <Grid item xs={12}>
+              <Item>
+                <PatientList />
+              </Item>
+            </Grid>
+          </Grid>
+        </Box>
+      </Container>
+      <Footer />
+    </>
+  );
 }

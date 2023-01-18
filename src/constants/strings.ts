@@ -1,0 +1,6 @@
+export const COMMON_ERROR = 'Oops!! Something went wrong, please try again later'
+export const SIGN_IN_TITLE = 'Clinical Portal Sign in'
+export const LOGIN_LABEL = 'Login'
+export const LOGOUT_LABEL = 'Logout'
+export const CLINICAL_TITLE = 'Clinician Portal'
+export const EMPTY_ERROR = 'This field can not be empty'
