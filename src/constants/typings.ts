@@ -25,8 +25,23 @@ export interface Patients {
     }[];
 }
 
+export interface PatientDetails {
+    title?: string;
+    firstName: string;
+    preferredName?: string;
+    middleName?: string;
+    familyName: string;
+    suffix?: string;
+    age: number;
+    sex: 'Male' | 'Female' | 'Unknown' | 'Indeterminate';
+}
+
 export type LoginResponse = SuccessResponse & ApiError
 
 export type ClinicianDetails = UserDetails & ApiError
 
 export type PatientsReponse = Patients & ApiError
+
+export type PatientDetailsResponse = PatientDetails & ApiError
+
+export type UserData = PatientDetails | UserDetails

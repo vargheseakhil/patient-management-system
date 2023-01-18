@@ -65,7 +65,7 @@ export function initFetchMock(fetchMockInstance) {
         sex: 'Male'
       },
       'STACY-1050': {
-        title: 'Miss',
+        title: 'Miss.',
         firstName: 'Stacy',
         middleName: 'Jane',
         familyName: 'Peters',

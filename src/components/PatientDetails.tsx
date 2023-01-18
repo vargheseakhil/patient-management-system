@@ -1,66 +1,90 @@
-import React, { useEffect, useState } from 'react';
-import Box from '@mui/material/Box';
-import Tab from '@mui/material/Tab';
-import TabContext from '@mui/lab/TabContext';
-import TabList from '@mui/lab/TabList';
-import TabPanel from '@mui/lab/TabPanel';
-import { getPatientList } from '../services/getPatientList';
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { Patients } from "../constants/typings";
-import { Skeleton } from '@mui/material';
+import React from "react";
+import { TabPanel } from "@mui/lab";
+import { COMMON_ERROR } from "../constants/strings";
+import {
+  Alert,
+  Avatar,
+  Box,
+  Card,
+  CardContent,
+  Typography,
+} from "@mui/material";
+import { PatientDetails } from "../constants/typings";
+import CardSkeleton from "./common/CardSkeleton";
+import { getPatientDetailsByID } from "../helpers/cacheAPIResponse";
+import { getDisplayName } from "../helpers/getDisplayName";
 
-export default function PatientDetails() {
-    const [value, setValue] = useState<string>('1');
-    const [loading, setLoading] = useState<boolean>(true)
-    const [patientList, setPatientList] = useState<Patients | null>(null)
-    const [selectedId, setSelectedId] = useState<string>('')
+type PatientDetailsProps = {
+  patientId: string;
+};
 
-    const navigate = useNavigate()
+export default function PatientDetailsTab(props: PatientDetailsProps) {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [patientData, setPatientData] = useState<PatientDetails | null>(null);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const navigate = useNavigate();
+  const { patientId } = props;
 
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        console.log(value)
-        setValue(newValue);
-    };
-
-    useEffect(() => {
-        getPatientList().then((res) => {
-            setLoading(false)
-            if (res.httpStatusCode === 401) {
-                navigate('/login')
-            } else {
-                setPatientList(res)
-                setSelectedId(res?.patients?.[0].id)
-                console.log(res, selectedId)
-            }
-        }).catch((err) => {
-            setLoading(false)
-            navigate('/login')
+  //Effect to fetch patient details
+  useEffect(() => {
+    if (patientId) {
+      setLoading(true);
+      getPatientDetailsByID(patientId)
+        .then((res) => {
+          setLoading(false);
+          if (res.httpStatusCode === 401) {
+            navigate("/login");
+          } else if (res.httpStatusCode === 404) {
+            setErrorMessage(res.errorMessage);
+          } else {
+            setPatientData(res);
+          }
         })
-    }, []);
+        .catch(() => {
+          setLoading(false);
+          setErrorMessage(COMMON_ERROR);
+        });
+    }
+  }, [patientId]);
 
-    return (
-        <Box sx={{ width: '100%', typography: 'body1' }}>
-            {
-                loading ? (
-                    <>
-                        <Skeleton variant="text" sx={{ fontSize: '1rem', height: 100 }} />
-                        <Skeleton variant="text" sx={{ fontSize: '1rem', height: 300 }} />
-                    </>
-                ) : <TabContext value={value}>
-                    <Box sx={{ borderBottom: 1, borderColor: 'divider' }}>
-                        <TabList onChange={handleChange} aria-label="lab API tabs example">
-                            {
-                                patientList && patientList.patients?.map(({ name, id }) => (
-                                    <Tab label={name} value={id} key={id}/>
-                                ))
-                            }
-                        </TabList>
-                    </Box>
-                    <TabPanel value={selectedId}>Item One</TabPanel>
-                    {/* <TabPanel value="2">Item Two</TabPanel>
-                    <TabPanel value="3">Item Three</TabPanel> */}
-                </TabContext>
-            }
-        </Box>
-    );
+  return (
+    <Box sx={{ m: 4, display: "flex", justifyContent: "center" }}>
+      <TabPanel value={patientId}>
+        <Card>
+          {errorMessage ? (
+            <Alert severity="error">{errorMessage}</Alert>
+          ) : (
+            <CardContent sx={{ minHeight: 180 }}>
+              {loading ? (
+                <CardSkeleton />
+              ) : (
+                <>
+                  <Avatar sx={{ mb: 2 }} src="/broken-image.jpg" />
+                  <Typography gutterBottom variant="h5" component="div">
+                    {patientData && getDisplayName(patientData)}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    align="left"
+                  >
+                    Sex: {patientData?.sex}
+                  </Typography>
+                  <Typography
+                    variant="body2"
+                    color="text.secondary"
+                    align="left"
+                  >
+                    Age: {patientData?.age}
+                  </Typography>
+                </>
+              )}
+            </CardContent>
+          )}
+        </Card>
+      </TabPanel>
+    </Box>
+  );
 }

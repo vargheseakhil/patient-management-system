@@ -1,13 +1,10 @@
 import { PatientsReponse } from "../constants/typings";
+import { getAPIAuthHeader } from "../helpers/getAPIAuthHeader";
 
-export async function getPatientList():Promise<PatientsReponse>{
-    const sessionToken = sessionStorage.getItem('session-token') || ''
-        const response = await fetch('/patients', {
-            method: 'GET',
-            headers: {
-                "Authorization": sessionToken
-            },
-        })
-        const patients: PatientsReponse = await response.json()
-        return patients;
+export async function getPatientList(): Promise<PatientsReponse> {
+  const response = await fetch("/patients", {
+    headers: getAPIAuthHeader(),
+  });
+  const patients: PatientsReponse = await response.json();
+  return patients;
 }
